@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,8 +9,9 @@ import {
   Platform,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React, { useState } from "react";
+import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
 
 const LoginScreen = ({ navigation }) => {
@@ -18,89 +20,91 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   return (
-    
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <Image
-        source={require("../../assets/login.jpg")}
-        style={{ width: width, height: "40%", marginTop: "10%" }}
-      />
-      <Text style={{ fontSize: 30, fontWeight: "900", textAlign: "center" }}>
-        Login
-      </Text>
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-        secureTextEntry
-      />
-      <TouchableOpacity>
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Home")}
-        style={styles.login}
-      >
-        <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>
-          LOGIN
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -500}
+    >
+      <View style={{ flex: 1, backgroundColor: "white" }}>
+        <Image
+          source={require("../../assets/login.jpg")}
+          style={{ width: width, height: "40%", marginTop: "10%" }}
+        />
+        <Text style={{ fontSize: 30, fontWeight: "900", textAlign: "center" }}>
+          Login
         </Text>
-      </TouchableOpacity>
-      <View style={styles.lineview}>
-        <Text style={{ marginHorizontal: 10 }}>or sign in with</Text>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          gap: 35,
-          marginTop: 15,
-        }}
-      >
+        <TextInput
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          style={styles.input}
+          secureTextEntry
+        />
         <TouchableOpacity>
-          <AntDesign name="google" size={24} color="black" />
+          <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <AntDesign name="facebook-square" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <AntDesign name="twitter" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          gap: 5,
-          marginTop: 20,
-        }}
-      >
-        <Text style={{ textAlign: "center", color: "black", fontSize: 16 }}>
-          Don't have an account?
-        </Text>
-        <TouchableOpacity>
-          <Text
-            onPress={() => navigation.navigate("SignUp")}
-            style={{
-              textAlign: "center",
-              color: "#007BFF",
-              fontSize: 16,
-              fontWeight: "bold",
-              textDecorationLine: "underline",
-            }}
-          >
-            Sign Up
+        <TouchableOpacity style={styles.login} onPress={() => navigation.navigate("Home")}>
+          <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>
+            LOGIN
           </Text>
         </TouchableOpacity>
+        <View style={styles.lineview}>
+          <Text style={{ marginHorizontal: 10 }}>or sign in with</Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            gap: 35,
+            marginTop: 15,
+          }}
+        >
+          <TouchableOpacity>
+            <AntDesign name="google" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <AntDesign name="facebook-square" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <AntDesign name="twitter" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            gap: 5,
+            marginTop: 20,
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "black", fontSize: 16 }}>
+            Don't have an account?
+          </Text>
+          <TouchableOpacity>
+            <Text
+              onPress={() => navigation.navigate("SignUp")}
+              style={{
+                textAlign: "center",
+                color: "#007BFF",
+                fontSize: 16,
+                fontWeight: "bold",
+                textDecorationLine: "underline",
+              }}
+            >
+              Sign Up
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

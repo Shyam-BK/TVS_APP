@@ -9,7 +9,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
+  ScrollView,
+  Alert,
 } from "react-native";
+import axios from "axios";
 
 const SignUpScreen = ({ navigation }) => {
   const width = Dimensions.get("screen").width;
@@ -19,136 +22,189 @@ const SignUpScreen = ({ navigation }) => {
   const [serviceProviding, setServiceProviding] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleSignUp = () => {
-    // Here you would send the data to your backend for account creation
-    console.log({
-      firstName,
-      lastName,
-      phoneNumber,
-      serviceProviding,
-      username,
-      password,
-    });
-    navigation.navigate("Home");
-  };
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1, backgroundColor: "white" }}
     >
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <Image
-        source={require("../../assets/signup.jpg")}
-        style={{ width: width, height: 180, marginTop: "10%" }}
-      />
-      <Text style={{ fontSize: 30, fontWeight: "900", textAlign: "center" }}>
-        Create Your Account
-      </Text>
-      <TextInput
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Phone Number"
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Service Providing"
-        value={serviceProviding}
-        onChangeText={setServiceProviding}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-        secureTextEntry
-      />
-      <TouchableOpacity style={styles.signup} onPress={handleSignUp}>
-        <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>
-          Sign Up
+      <View style={{ flex: 1 }}>
+        <Image
+          source={require("../../assets/signup.jpg")}
+          style={{ width: width, height: 200, marginTop: "10%" }}
+        />
+        <Text
+          style={{
+            fontSize: 30,
+            fontWeight: "900",
+            textAlign: "center",
+          }}
+        >
+          Create Your Account
         </Text>
-      </TouchableOpacity>
-      <View style={styles.lineview}>
-        <View style={styles.line}></View>
-        <Text style={{ marginHorizontal: 10 }}>or </Text>
-        <View style={styles.line}></View>
-      </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.formContainer}>
+            <View style={styles.row}>
+              <TextInput
+                placeholder="First Name"
+                value={firstName}
+                onChangeText={setFirstName}
+                style={{
+                  width: "48%",
+                  height: 40,
+                  marginVertical: 10,
+                  borderColor: "#007BFF",
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  paddingLeft: 10,
+                }}
+              />
+              <TextInput
+                placeholder="Last Name"
+                value={lastName}
+                onChangeText={setLastName}
+                style={{
+                  width: "48%",
+                  height: 40,
+                  marginVertical: 10,
+                  borderColor: "#007BFF",
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  paddingLeft: 10,
+                }}
+              />
+            </View>
+            <TextInput
+              placeholder="Phone Number"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              style={styles.input}
+              keyboardType="numeric"
+              maxLength={10}
+            />
+            <TextInput
+              placeholder="Service Providing"
+              value={serviceProviding}
+              onChangeText={setServiceProviding}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Username"
+              value={username}
+              onChangeText={setUsername}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              style={styles.input}
+              secureTextEntry
+            />
+            <TextInput
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              style={styles.input}
+              secureTextEntry
+            />
+            <TouchableOpacity
+              style={styles.signUp}
+              onPress={() => {
+                navigation.navigate("Home");
+              }}
+            >
+              <Text
+                style={{ textAlign: "center", color: "white", fontSize: 18 }}
+              >
+                Sign Up
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-      <View style={{ flexDirection: "row", justifyContent: "center", gap: 5,  }}>
-        <Text style={{ textAlign: "center", color: "black", fontSize: 16 }}>
-          Already have an account?
-        </Text>
-        <TouchableOpacity>
-          <Text
-            onPress={() => navigation.navigate("Login")}
+          <View style={styles.lineview}>
+            <View style={styles.line}></View>
+            <Text style={{ marginHorizontal: 10 }}>or</Text>
+            <View style={styles.line}></View>
+          </View>
+          <View
             style={{
-              textAlign: "center",
-              color: "#007BFF",
-              fontSize: 16,
-              fontWeight: "bold",
-              textDecorationLine: "underline",
+              flexDirection: "row",
+              justifyContent: "center",
+              marginBottom: 10,
+              bottom: 10,
             }}
           >
-            Login
-          </Text>
-        </TouchableOpacity>
+            <Text style={{ textAlign: "center", color: "black", fontSize: 16 }}>
+              Already have an account?
+            </Text>
+            <Text> </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#007BFF",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  textDecorationLine: "underline",
+                }}
+              >
+                Login
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
-    </View>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  input: {
+  scrollContainer: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  formContainer: {
+    width: "100%",
+    alignItems: "center",
+    paddingBottom: 20, // Adjusted padding to accommodate space for the keyboard
+  },
+  row: {
+    flexDirection: "row",
     width: "80%",
-    alignSelf: "center",
+    justifyContent: "space-between",
+  },
+  input: {
+    width: "80%", // Adjusted width to fit within the form
     height: 40,
-    margin: 12,
-    borderColor: "#007BFF", // Blue border color
-    borderWidth: 1, // Border width
+    marginVertical: 10,
+    borderColor: "#007BFF",
+    borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
   },
-  signup: {
-    width: "80%",
-    alignSelf: "center",
+  signUp: {
     backgroundColor: "#007BFF",
     padding: 10,
     borderRadius: 5,
-    marginTop: 20,
+    width: "80%",
+    marginTop: 10,
   },
   lineview: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "center",
-    width: "80%",
-    alignSelf: "center",
-    marginVertical: 10,
+    bottom: 10,
   },
   line: {
-    flex: 1,
-    height: 1,
     backgroundColor: "black",
+    height: 2,
+    width: 130,
+    marginVertical: 10,
   },
 });
 

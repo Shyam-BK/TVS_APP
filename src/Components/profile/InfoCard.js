@@ -1,42 +1,8 @@
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from "react-native";
-import React, { useState } from "react";
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const InfoCard = ({ navigation }) => {
-  const [isEditingUsername, setIsEditingUsername] = useState(false);
-  const [isEditingEmail, setIsEditingEmail] = useState(false);
-  const [username, setUsername] = useState("Shyam123");
-  const [email, setEmail] = useState("Shyam123@gmail.com");
-  const [isEmailValid, setIsEmailValid] = useState(true);
-
-  const handleUsernamePress = () => {
-    setIsEditingUsername(true);
-  };
-
-  const handleEmailPress = () => {
-    setIsEditingEmail(true);
-  };
-
-  const handleEmailChange = (text) => {
-    setEmail(text);
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsEmailValid(emailRegex.test(text));
-  };
-
-  const handleEmailBlur = () => {
-    // Check email validity
-    if (isEmailValid) {
-      setIsEditingEmail(false);
-      Alert.alert("Success", "Email updated successfully!");
-    } else {
-      Alert.alert("Error", "Please enter a valid email address.");
-    }
-  };
-
-  const handleUsernameBlur = () => {
-    setIsEditingUsername(false);
-    Alert.alert("Success", "Username updated successfully!");
-  };
+  const serviceProviding = "Electrician"; // Example service providing data
 
   return (
     <View style={{ flex: 1, marginTop: 10 }}>
@@ -45,33 +11,10 @@ const InfoCard = ({ navigation }) => {
       <Text style={styles.text}>+91 9934567800</Text>
 
       <Text style={styles.label}>Username</Text>
-      {isEditingUsername ? (
-        <TextInput
-          style={styles.textInput}
-          value={username}
-          onChangeText={setUsername}
-          onBlur={handleUsernameBlur}
-        />
-      ) : (
-        <TouchableOpacity onPress={handleUsernamePress}>
-          <Text style={styles.text}>{username}</Text>
-        </TouchableOpacity>
-      )}
+      <Text style={styles.text}>Shyam123</Text>
 
-      <Text style={styles.label}>Email ID</Text>
-      {isEditingEmail ? (
-        <TextInput
-          style={[styles.textInput, !isEmailValid && styles.invalidInput]}
-          value={email}
-          onChangeText={handleEmailChange}
-          onBlur={handleEmailBlur}
-          keyboardType="email-address"
-        />
-      ) : (
-        <TouchableOpacity onPress={handleEmailPress}>
-          <Text style={styles.text}>{email}</Text>
-        </TouchableOpacity>
-      )}
+      <Text style={styles.label}>Service Providing</Text>
+      <Text style={styles.text}>{serviceProviding}</Text>
 
       <Text
         style={{
@@ -141,21 +84,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-  },
-  textInput: {
-    fontSize: 14,
-    borderBottomWidth: 1,
-    borderColor: "#ccc",
-    padding: 2,
-  },
-  invalidInput: {
-    borderColor: "red",
-  },
-  logoutText: {
-    fontSize: 20,
-    fontWeight: "800",
-    color: "#00AEB9",
-    marginTop: 40,
   },
 });
 
