@@ -1,13 +1,12 @@
 import { View } from "react-native";
-import HomeScreen from "./src/screens/HomeScreen";
+import store from "./redux/store";
 import Navigator from "./navigation";
-
+import { Provider as ReduxProvider } from "react-redux";
+import { NavigationContainer } from "@react-navigation/native";
 export default function App() {
   return (
-     <View style={{flex: 1}}>
-      <Navigator/>
-     </View>
-      
-    
+    <ReduxProvider store={store}>
+      <Navigator />
+    </ReduxProvider>
   );
 }

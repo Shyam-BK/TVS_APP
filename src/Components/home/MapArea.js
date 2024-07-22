@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import * as Location from "expo-location";
 
-const MapArea = ({ location, setLocation, errorMsg, setErrorMsg }) => {
+const MapArea = ({ location, setLocation, errorMsg, setErrorMsg, authToken }) => {
   const mapRef = useRef(null); // Reference to the MapView
 
   const handleLocationPress = async () => {
@@ -23,6 +23,7 @@ const MapArea = ({ location, setLocation, errorMsg, setErrorMsg }) => {
         },
         1000
       ); // Duration of the animation in milliseconds
+
     } catch (error) {
       setErrorMsg(`Failed to fetch location: ${error.message}`);
     }
@@ -83,4 +84,5 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
 export default MapArea;

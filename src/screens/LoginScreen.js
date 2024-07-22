@@ -13,11 +13,50 @@ import {
 } from "react-native";
 import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogin, setToken } from "../../redux/reducers/loginReducer";
+
 
 const LoginScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const width = Dimensions.get("screen").width;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      Alert.alert("Error", "Username and password are required");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await axios.post("https://bf2d-61-3-235-146.ngrok-free.app/login/", {
+        username,
+        password,
+      });
+
+      if (response.status === 200) {
+        // console.log(response.data);
+        const token = response.data.token;
+        const data = JSON.stringify(response.data);
+        await AsyncStorage.setItem("userToken", token);
+        await AsyncStorage.setItem("userData", data);
+        dispatch(setLogin(true));
+        dispatch(setToken(response.data.token));
+        // dispatch(setData(response.data));
+       
+      }
+    }
+     catch (error) {
+      Alert.alert("Error", "Invalid credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -50,32 +89,12 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.login} onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity style={styles.login} onPress={handleLogin} disabled={loading}>
           <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>
-            LOGIN
+            {loading ? "Logging in..." : "LOGIN"}
           </Text>
         </TouchableOpacity>
-        <View style={styles.lineview}>
-          <Text style={{ marginHorizontal: 10 }}>or sign in with</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            gap: 35,
-            marginTop: 15,
-          }}
-        >
-          <TouchableOpacity>
-            <AntDesign name="google" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <AntDesign name="facebook-square" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <AntDesign name="twitter" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
+        
 
         <View
           style={{

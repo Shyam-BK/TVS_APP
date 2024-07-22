@@ -1,29 +1,76 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from "react-redux";
+import { setToken } from "../../../redux/reducers/loginReducer";
+import axios from "axios";
 
 const InfoCard = ({ navigation }) => {
-  const serviceProviding = "Electrician"; // Example service providing data
+  const dispatch = useDispatch();
+  const [userData, setUserData] = useState('');
+  
+  const getUserData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await axios.get("https://bf2d-61-3-235-146.ngrok-free.app/get_user_data/", {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    });
+    setUserData(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+  
+  
+    useEffect(() => {
+      getUserData();
+    },[]);
+  const handleLogout = async () => {
+    
+    Alert.alert(
+      'Confirm Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          onPress: async () => {
+            try {
+              // Clear user token or any other logout logic here
+              await AsyncStorage.removeItem('userToken');
+              await AsyncStorage.removeItem('userData');
+              // Reset the navigation stack to only show Login screen
+              dispatch(setToken(""));
+              
+            } catch (e) {
+              console.error(e);
+            }
+          },
+          style: 'destructive',
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   return (
     <View style={{ flex: 1, marginTop: 10 }}>
       <Text style={styles.sectionTitle}>Account</Text>
       <Text style={styles.label}>Phone Number</Text>
-      <Text style={styles.text}>+91 9934567800</Text>
+      <Text style={styles.text}>+91 {userData.phoneNumber}</Text>
 
       <Text style={styles.label}>Username</Text>
-      <Text style={styles.text}>Shyam123</Text>
+      <Text style={styles.text}>{userData.username}</Text>
 
       <Text style={styles.label}>Service Providing</Text>
-      <Text style={styles.text}>{serviceProviding}</Text>
+      <Text style={styles.text}>{userData.serviceProviding}</Text>
 
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: "800",
-          color: "#00AEB9",
-          marginTop: 18,
-        }}
-      >
+      <Text style={{ fontSize: 16, fontWeight: "800", color: "#00AEB9", marginTop: 18 }}>
         Settings
       </Text>
       <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
@@ -32,14 +79,7 @@ const InfoCard = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: "800",
-          color: "#00AEB9",
-          marginTop: 18,
-        }}
-      >
+      <Text style={{ fontSize: 16, fontWeight: "800", color: "#00AEB9", marginTop: 18 }}>
         Help
       </Text>
       <Text style={{ fontSize: 14, fontWeight: "bold", marginTop: 10 }}>
@@ -54,15 +94,8 @@ const InfoCard = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: "800",
-            color: "#00AEB9",
-            marginTop: 40,
-          }}
-        >
+      <TouchableOpacity onPress={handleLogout}>
+        <Text style={{ fontSize: 20, fontWeight: "800", color: "#00AEB9", marginTop: 40 }}>
           Logout
         </Text>
       </TouchableOpacity>

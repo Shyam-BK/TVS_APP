@@ -4,26 +4,63 @@ import * as Location from "expo-location";
 import HomeHeader from "../Components/home/HomeHeader";
 import MapArea from "../Components/home/MapArea";
 import LocationCard from "../Components/home/LocationCard";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const UPDATE_INTERVAL = 1000 * 60 * 1;
 
   useEffect(() => {
-    (async () => {
+    const updateLocation = async () => {
+      // Request permissions to access location
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        console.error("Permission to access location was denied");
         return;
       }
 
+      // Get the current location
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      const { latitude, longitude } = location.coords;
+      console.log("Current location:", latitude, longitude);
+
+      // Send location to the backend
+      const token = await AsyncStorage.getItem("userToken");
+      console.log("Token:", token);
       try {
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
+        const response = await axios.post(
+          "https://bf2d-61-3-235-146.ngrok-free.app/update_latlong/",
+          {
+            latitude: latitude,
+            longitude: longitude,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Token ${token}`, // Ensure the token is correct
+            },
+          }
+        );
+        console.log("Success:", response.data);
       } catch (error) {
-        setErrorMsg(`Failed to fetch location: ${error.message}`);
+        console.error(
+          "Error:",
+          error.response ? error.response.data : error.message
+        );
       }
-    })();
+    };
+
+    // Initial location update
+    updateLocation();
+
+    // Set up interval to update location every 5 minutes
+    const interval = setInterval(updateLocation, UPDATE_INTERVAL);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (

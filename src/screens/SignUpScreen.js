@@ -13,6 +13,9 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../redux/reducers/loginReducer";
 
 const SignUpScreen = ({ navigation }) => {
   const width = Dimensions.get("screen").width;
@@ -23,6 +26,80 @@ const SignUpScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const dispatch = useDispatch();
+
+  const handleSignUp = async () => {
+    if (
+      !firstName ||
+      !lastName ||
+      !phoneNumber ||
+      !serviceProviding ||
+      !username ||
+      !password ||
+      !confirmPassword
+    ) {
+      Alert.alert("Error", "All fields must be filled");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "https://bf2d-61-3-235-146.ngrok-free.app/register/",
+        {
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+          serviceProviding: serviceProviding,
+          username: username,
+          password: password,
+        }
+      );
+
+      if (response.status === 201) {
+        const token = response.data.token; // Assuming the token is returned in the response
+        // console.log("response data:", response.data);
+
+        // Save token to AsyncStorage
+        await AsyncStorage.setItem("userToken", token);
+        await AsyncStorage.setItem("userData", JSON.stringify(response.data));
+
+        // Dispatch token to Redux store
+        dispatch(setToken(token));
+
+        Alert.alert("Success", "Account created successfully");
+
+        navigation.navigate("Home");
+      } else {
+        Alert.alert("Error", "An error occurred during signup");
+      }
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Error data:", error.response.data);
+        console.log("Error status:", error.response.status);
+        console.log("Error headers:", error.response.headers);
+        Alert.alert(
+          "Error",
+          `Failed to signup: ${error.response.data.message || "Unknown error"}`
+        );
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log("Error request:", error.request);
+        Alert.alert("Error", "No response received from the server");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error message:", error.message);
+        Alert.alert("Error", `Failed to signup: ${error.message}`);
+      }
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -112,12 +189,7 @@ const SignUpScreen = ({ navigation }) => {
               style={styles.input}
               secureTextEntry
             />
-            <TouchableOpacity
-              style={styles.signUp}
-              onPress={() => {
-                navigation.navigate("Home");
-              }}
-            >
+            <TouchableOpacity style={styles.signUp} onPress={handleSignUp}>
               <Text
                 style={{ textAlign: "center", color: "white", fontSize: 18 }}
               >
