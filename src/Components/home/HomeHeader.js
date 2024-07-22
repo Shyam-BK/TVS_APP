@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSelector } from "react-redux";
 import axios from "axios";import AsyncStorage from "@react-native-async-storage/async-storage";
+import axiosInstance from "../../services/api";
 
 const HomeHeader = ({ navigation , location, }) => {
    const [userData, setUserData] = useState('');
@@ -15,7 +16,7 @@ const getUserData = async () => {
     if (!token) {
       throw new Error("Token not found");
     }
-    const response = await axios.get("https://bf2d-61-3-235-146.ngrok-free.app/get_user_data/", {
+    const response = await axiosInstance.get(`get_user_data/`, {
       headers: {
         Authorization: `Token ${token}`
       }

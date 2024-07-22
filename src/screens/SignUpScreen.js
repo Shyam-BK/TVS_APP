@@ -16,6 +16,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../redux/reducers/loginReducer";
+import axiosInstance from "../services/api";
 
 const SignUpScreen = ({ navigation }) => {
   const width = Dimensions.get("screen").width;
@@ -49,8 +50,8 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     try {
-      const response = await axios.post(
-        "https://bf2d-61-3-235-146.ngrok-free.app/register/",
+      const response = await axiosInstance.post(
+        `register/`,
         {
           firstName: firstName,
           lastName: lastName,

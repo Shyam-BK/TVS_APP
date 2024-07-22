@@ -12,10 +12,10 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios";
-import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setLogin, setToken } from "../../redux/reducers/loginReducer";
+import axiosInstance from "../services/api";
 
 
 const LoginScreen = ({ navigation }) => {
@@ -34,13 +34,14 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://bf2d-61-3-235-146.ngrok-free.app/login/", {
+      const response = await axiosInstance.post(`login/`, {
         username,
         password,
       });
+      //console.log(response);
 
       if (response.status === 200) {
-        // console.log(response.data);
+        //console.log(response);
         const token = response.data.token;
         const data = JSON.stringify(response.data);
         await AsyncStorage.setItem("userToken", token);

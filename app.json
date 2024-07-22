@@ -14,7 +14,9 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "We need your location to show you nearby places."
+        "NSLocationAlwaysUsageDescription": "This app needs access to your location even when in the background.",
+        "NSLocationWhenInUseUsageDescription": "This app needs access to your location.",
+        "UIBackgroundModes": ["location"]
       }
     },
     "android": {
@@ -23,9 +25,12 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "ACCESS_FINE_LOCATION"
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION"        
       ],
-      "package": "com.TVS.client_app"
+      "package": "com.TVS.client_app",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

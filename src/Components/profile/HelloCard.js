@@ -4,6 +4,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import InfoCard from "./InfoCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import axiosInstance from "../../services/api";
 
 const HelloCard = ({navigation,location }) => {
 
@@ -12,7 +13,7 @@ const HelloCard = ({navigation,location }) => {
   const getUserData = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const response = await axios.get("https://bf2d-61-3-235-146.ngrok-free.app/get_user_data/", {
+      const response = await axiosInstance.get(`get_user_data/`, {
       headers: {
         Authorization: `Token ${token}`
       }
