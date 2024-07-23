@@ -17,7 +17,7 @@ const ProfileHeader = ({ navigation }) => {
       </View>
       <View>
         <Image
-          source={require("../../../assets/profilepic.png")}
+          source={require("./tvslogo.png")}
           style={{
             width: 120,
             height: 120,
