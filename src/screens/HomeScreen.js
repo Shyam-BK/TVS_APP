@@ -6,6 +6,7 @@ import MapArea from "../Components/home/MapArea";
 import LocationCard from "../Components/home/LocationCard";
 import axiosInstance from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Animation from "../Components/home/Animation";
 
 const HomeScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
@@ -67,12 +68,13 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <StatusBar translucent={false} />
       <HomeHeader navigation={navigation} location={location} />
-      <MapArea
+      {/* <MapArea
         location={location}
         setLocation={setLocation}
         errorMsg={errorMsg}
         setErrorMsg={setErrorMsg}
-      />
+      /> */}
+      <Animation />
       <LocationCard location={location} />
     </View>
   );

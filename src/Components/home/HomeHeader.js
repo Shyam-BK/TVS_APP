@@ -44,7 +44,7 @@ const getUserData = async () => {
         Welcome {userData? userData.firstName +" "+ userData.lastName:"Guest"} !!
       </Text>
       <TouchableOpacity onPress={() => navigation.navigate("Profile", { location })}>
-        <MaterialIcons name="account-circle" size={40} color={"black"} />
+        <MaterialIcons name="account-circle" size={42} color={"black"} />
       </TouchableOpacity>
     </View>
   );
@@ -52,7 +52,7 @@ const getUserData = async () => {
 
 const styles = StyleSheet.create({
   conatiner: {
-    flex: 0.5,
+    flex: 0.2,
     height: 60,
     backgroundColor: "#8DDBE0",
     justifyContent: "space-between",
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   name: {
-    fontSize: 20, 
+    fontSize: 24, 
     fontWeight: "900",
   },
 });
