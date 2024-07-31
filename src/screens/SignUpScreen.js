@@ -63,10 +63,7 @@ const SignUpScreen = ({ navigation }) => {
       );
 
       if (response.status === 201) {
-        const token = response.data.token; // Assuming the token is returned in the response
-        // console.log("response data:", response.data);
-
-        // Save token to AsyncStorage
+        const token = response.data.token; 
         await AsyncStorage.setItem("userToken", token);
         await AsyncStorage.setItem("userData", JSON.stringify(response.data));
 
